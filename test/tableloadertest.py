@@ -11,19 +11,20 @@ from datahelper.tableloader.tableloader import TableLoader
 import numpy as np
 
 if __name__ == '__main__':
-    loader = EntContributeLoader('../datahelper/')
-    # loader = EntInsuranceLoader()
+    # loader = EntContributeLoader('../datahelper/')
+    loader = EntInsuranceLoader()
     # dataloader = DataLoader(is_init_dic=True, prefix='../datahelper/', load_set=[loader.load_name])
     #
     # test_data = dataloader.get_table_by_name(loader.load_name)
     #
     # print(test_data)
     # print(dataloader.get_loader_bu_name(loader.load_name).segment_name)
-    dataloader = DataLoader(is_init_dic=True, prefix='../datahelper/')
+    dataloader = DataLoader(is_init_dic=True, prefix='../datahelper/', load_set=[loader.load_name])
 
     data = dataloader.company_data
     data = np.array(data)
     print(data.shape)
+    print(data)
 
     # a = np.zeros((5, ))
     # b = np.ones((5, ))

@@ -1,4 +1,16 @@
 from datahelper import utils
+import numpy as np
+
+
+def normalization(data):
+    _range = np.max(data) - np.min(data)
+    return (data - np.min(data)) / _range
+
+
+def standardization(data):
+    mu = np.mean(data, axis=0)
+    sigma = np.std(data, axis=0)
+    return (data - mu) / sigma
 
 
 class DataFilter:
@@ -13,12 +25,32 @@ class DataFilter:
             self.init_dic = None
 
     def filter(self, data):
+        """
+        在个性化装载完以及修饰完后调用，负责数据的包装
+        :param data: 一个字典，包含 key:表格名称 还有表格所包含的字段
+        :return: 过滤，加权以及归一化后的数据
+        """
+
+        for key in data:
+            if key == 'key':
+                continue
+            elif key == 'entname':
+                continue
+
+            raw_data = data[key]
+            raw_data = np.array(raw_data)
+            raw_data = standardization(raw_data)
+            raw_data = normalization(raw_data)
+            if key in self.weight_dic:
+                raw_data = raw_data * self.weight_dic[key]
+            data[key] = raw_data
+
         return data
 
     def load_init_dic(self):
         init_dic = {}
         filename = self.prefix + 'init_dic.txt'
-        with open(filename, 'r') as file:
+        with open(filename, 'r', encoding='UTF-8') as file:
             cur_key = ''
             while True:
                 line = file.readline()

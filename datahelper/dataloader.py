@@ -53,7 +53,7 @@ class DataLoader:
         return data
 
     def _load(self, key):
-        wb = csv.reader(open(self.filedir + '/' + key + '.csv', 'r'))
+        wb = csv.reader(open(self.filedir + '/' + key + '.csv', 'r', encoding='UTF-8'))
         ws = [x for x in wb]
         result_dic = {}
 
