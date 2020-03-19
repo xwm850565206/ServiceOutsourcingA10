@@ -1,0 +1,72 @@
+# ent_onlineshop
+shopnum 
+# ent_branch
+branchnum 
+# ent_contribution_year
+
+# ent_guarantee
+priclaseckind pefperfrom iftopub priclasecam pefperto guaranperiod gatype rage 
+# ent_investment
+investnum 
+# ent_bid
+bidnum 
+# recruit_qcwy
+qcwynum 
+# recruit_zhyc
+zhycnum 
+# recruit_zlzp
+zlzpnum 
+# ent_social_security
+unpaidsocialins_so110 unpaidsocialins_so210 unpaidsocialins_so310 unpaidsocialins_so410 unpaidsocialins_so510 updatetime 
+# justice_enforced
+
+# justice_judge_new
+latypes 
+# business_risk_abnormal
+is_bra 
+# business_risk_all_punish
+is_brap 
+# business_risk_rightpledge
+pledgenum 
+# business_risk_taxunpaid
+taxunpaidnum 
+# administrative_punishment
+is_punish 
+# exception_list
+is_except 
+# trademark_infoa
+is_infoa 
+# trademark_infob
+is_infob 
+# enterprise_keep_contract
+is_kcont 
+# jn_special_new_info
+is_jnsn 
+# justice_credit
+is_justice_credit 
+# justice_credit_aic
+is_justice_creditaic 
+# intangible_brand
+ibrand_num 
+# intangible_copyright
+icopy_num 
+# intangible_patent
+ipat_num 
+# web_record_info
+idom_num 
+# company_baseinfo
+regcapcur entstatus enttype entcat industryphy 
+# change_info
+alttime 
+# ent_contribution
+inv inv inv inv inv inv inv inv inv inv inv inv inv inv inv inv 
+# enterprise_insurance
+xzbz xzbz xzbz xzbz xzbz xzbz xzbz xzbz xzbz 
+# jn_credit_info
+credit_grade 
+# jn_tech_center
+level_rank 
+# justice_declare
+defendant_num 
+# product_checkinfo_connect
+passpercent 
