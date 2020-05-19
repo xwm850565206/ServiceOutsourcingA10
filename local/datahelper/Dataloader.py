@@ -17,7 +17,7 @@ import csv
 
 class DataLoader:
 
-    def __init__(self, is_init_dic, prefix='', load_set=None):
+    def __init__(self, is_init_dic, prefix='', load_set=None, filter_func='standard'):
         self.is_init_dic = is_init_dic
 
         self.data_info = datainfo.DataInfo(prefix)
@@ -30,13 +30,16 @@ class DataLoader:
         ]
 
         self.filedir = prefix + self.data_info.filedir + '/Data_FCDS_hashed'
+        self.filter_func = filter_func
         self.data = self.load(load_set)
 
         self.company_list = self.get_company_list()
-        self.segment_length = self.cal_segment_length()
+        self.segment_list = []
+        self.company_data = self.generate_company_data()  # 生成聚类需要的形状
+        self.segment_length = len(self.segment_list)
         self.shape = (len(self.company_list), self.segment_length)
 
-        self.company_data = self.generate_company_data()  # 生成聚类需要的形状
+        print("总数据形状为:", self.shape)
 
         if not is_init_dic:
             self.generate_init_dic()
@@ -73,7 +76,6 @@ class DataLoader:
 
         result_dic = table_loader.load(result_dic)  # 个性化装载
         result_dic = table_loader.describe(result_dic)  # 展开，修饰
-        result_dic = self.data_filter.filter(result_dic)  # 过滤，赋权，归一化等
 
         result_dic['key'] = key  # 防止处理后丢失
 
@@ -82,35 +84,34 @@ class DataLoader:
     def generate_company_data(self):
         """
         生成(n, m)形状的数据，其中n是n个公司，m是m种字段，相当于对数据进行最后一次处理，这之后就可以用于计算了
-        :return:
+        :return: company_data
         """
         print("begin to reshape and join all data")
 
-        company_data = np.zeros(self.shape)  # 用numpy array代替python list 以此提高运算速度
+        is_init_segment_list = False  # 生成数据的同时把每一列对应的字段也要初始化完毕
+        company_data = [[] for i in range(len(self.company_list))]  # 生成(n, ?)形状的list，根据字段总数确定?
         for i, name in enumerate(self.company_list):
-            company = np.zeros((self.segment_length, ))  # segment_length
-            tail = 0
+            company = []
             for table in self.data:
                 table_loader = self.get_loader_bu_name(table['key'])
                 segment_name = table_loader.segment_name[table['key']]
+                if not is_init_segment_list:
+                    self.segment_list.extend(segment_name)
                 if name in table:
                     cur_data = table[name]
-                    for j in range(tail, tail+len(cur_data)):
-                        try:
-                            company[j] = cur_data[j-tail]
-                        except ValueError:
-                            company[j] = table_loader.solve_unaccept_value(cur_data[j-tail], segment_name[j-tail])
-                    tail += len(cur_data)
+                    company.extend(cur_data)
                 else:
                     tmp = []
                     for segment in segment_name:
                         tmp.append(table_loader.solve_unaccept_value(None, segment))
-                    for j in range(tail, tail + len(tmp)):
-                        company[j] = tmp[j - tail]
-                    tail += len(tmp)
+                    company.extend(tmp)
             company_data[i] = company
-        print("finish join data")
+            is_init_segment_list = True
 
+        company_data = np.array(company_data)
+        company_data = self.data_filter.filter(company_data, self.segment_list, self.filter_func)
+
+        print("finish join data")
         return company_data
 
     def generate_init_dic(self):
@@ -170,7 +171,7 @@ class DataLoader:
     def get_company_list(self):
         """
         统计出所有的公司
-        :return:
+        :return: 所有在表格中出现过的公司名字
         """
         print("begin to generate company list")
 
@@ -186,22 +187,16 @@ class DataLoader:
 
         return list(company_set)
 
-    def cal_segment_length(self):
-        """
-        统计出所有所需字段的长度
-        :return:
-        """
-        length = 0
-        for loader in self.loader:
-            for segment in loader.segment_name:
-                length += len(loader.segment_name[segment])
-        print("project data segment length is", length)
-        return length
-
 
 if __name__ == '__main__':
 
     dataloader = DataLoader(is_init_dic=True)
+    # data, sub_segment_name = utils.get_target_segment_data(dataloader, 'target_credit')
+    #
+    # print(sub_segment_name)
+    # print(data)
+
+    print(dataloader.segment_list)
 
     # print(dataloader.data)
 

@@ -70,6 +70,7 @@ class EntContributeLoader(TableLoader):
 
     def describe(self, table):
 
+        sorted(table.keys())
         company = table['entname']
         inv = table['inv']
         data = {}
@@ -77,7 +78,7 @@ class EntContributeLoader(TableLoader):
         for i, name in enumerate(company):
             data[name] = inv[i]
 
-        self.segment_name[table['key']] = ['inv' for i in range(len(self.datafilter.init_dic['invtype']))]
+        self.segment_name[table['key']] = ['inv'+str(i) for i in range(len(self.datafilter.init_dic['invtype']))]
 
         return data
 

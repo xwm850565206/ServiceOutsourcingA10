@@ -20,6 +20,7 @@ class DataInfo:
         filenames = [x.value.replace(' ', '') for i, x in enumerate(filenames)
                      if x.value is not None and x.value != '' and i != 0]
         self.file_set = [x.lower() for x in filenames]
+        self.file_set.remove('enterprise_guarantee')  # 这个表格的数据处理还没想好 todo
 
         table_slice = 'B2:C' + str(ws.max_row)
         tables = ws[table_slice]
@@ -35,6 +36,7 @@ class DataInfo:
                  for x in datas]
         for key, value in datas:
             self.data_info[key.lower()] = value
+
 
 if __name__ == '__main__':
     datainfo = DataInfo()

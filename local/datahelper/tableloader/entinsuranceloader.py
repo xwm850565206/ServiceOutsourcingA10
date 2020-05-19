@@ -33,12 +33,14 @@ class EntInsuranceLoader(TableLoader):
             company.append(name)
             xzbz.append(data[name])
 
-        table['xzbz'] = xzbz
-        table['entname'] = company
-        return table
+        result = {'xzbz': xzbz, 'entname': company, 'key': table['key']}
+        # table['xzbz'] = xzbz
+        # table['entname'] = company
+        return result
 
     def describe(self, table):
 
+        sorted(table.keys())
         company = table['entname']
         xzbz = table['xzbz']
         data = {}
@@ -46,7 +48,7 @@ class EntInsuranceLoader(TableLoader):
         for i, name in enumerate(company):
             data[name] = xzbz[i]
 
-        self.segment_name[table['key']] = ['xzbz' for i in range(9)]
+        self.segment_name[table['key']] = ['xzbz'+str(i) for i in range(9)]
 
         return data
 

@@ -13,19 +13,33 @@ class TableLoader:
     def load(self, table):
         """
         每张表的数据的处理情况很可能不同，使用这个方法来对表格数据进行最初的处理
-        :param table:
-        :return:
+        :param table: 把表格中的数据读入后，进行第一层的处理，而后交给DataFilter类处理
+        :return: 简单处理过后的表单数据
         """
+        for key in table:
+            if key == 'key':
+                continue
+            elif key == 'entname':
+                continue
+            elif key in ignore_set:
+                continue
+            data = table[key]
+            for i, x in enumerate(data):
+                try:
+                    data[i] = round(float(x), 4)
+                except ValueError:
+                    data[i] = self.solve_unaccept_value(x, key)
+            table[key] = data
 
         return table
 
     def describe(self, table):
         """
-        在load完进行加工数据的方法，使用这个方法来展开数据等
-        :param table:
-        :return:
+        在load完并且进行过滤后进行加工数据的方法，使用这个方法来展开数据等
+        :param table: 由DataLoader load后的数据
+        :return: 把数据展开成(n, m)形状返回
         """
-
+        sorted(table.keys())
         data = {}
         company = table['entname']
         is_segment_init = False

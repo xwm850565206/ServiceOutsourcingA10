@@ -4,8 +4,6 @@ shopnum
 branchnum 
 # ent_contribution_year
 
-# ent_guarantee
-priclaseckind pefperfrom iftopub priclasecam pefperto guaranperiod gatype rage 
 # ent_investment
 investnum 
 # ent_bid
@@ -21,7 +19,7 @@ unpaidsocialins_so110 unpaidsocialins_so210 unpaidsocialins_so310 unpaidsocialin
 # justice_enforced
 
 # justice_judge_new
-latypes 
+
 # business_risk_abnormal
 is_bra 
 # business_risk_all_punish
@@ -55,7 +53,7 @@ ipat_num
 # web_record_info
 idom_num 
 # company_baseinfo
-regcapcur entstatus enttype entcat industryphy 
+regcapcur entstatus enttype entcat industryphy empnum estdate 
 # change_info
 alttime 
 # ent_contribution

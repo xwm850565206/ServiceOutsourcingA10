@@ -12,6 +12,7 @@ class CompanyInfoLoader(TableLoader):
         super().__init__()
         self.load_name = 'company_baseinfo'
         self.data_filter = DataFilter(is_init_dic=True, prefix=prefix)
+        self.currency = ['人民币', '美元', '欧元']
 
     def load(self, table):
         result = {}
@@ -36,7 +37,10 @@ class CompanyInfoLoader(TableLoader):
             if regcap[i] > 999:
                 regcap[i] /= 1000  # 这里有个很大的问题，数据有的是万元 有的是元，现在姑且先这么处理
 
-        result['regcapcur'] = regcap
+            regcapcur[i] = self.currency.index(regcapcur[i])
+
+        result['regcapcur'] = regcapcur
+        result['regcap'] = regcap
 
         entstatus = table['entstatus']
         entstatus_set = self.data_filter.init_dic['entstatus']
@@ -78,6 +82,15 @@ class CompanyInfoLoader(TableLoader):
             industryphy[i] = index
         result['industryphy'] = industryphy
 
+        empnum = table['empnum']
+        for i, x in enumerate(empnum):
+            try:
+                empnum[i] = int(x)
+            except ValueError:
+                empnum[i] = self.solve_unaccept_value(x, 'empnum')
+        result['empnum'] = empnum
+
+        result['estdate'] = [round(float(x), 4) for x in table['estdate']]
         result['entname'] = table['entname']
         result['key'] = table['key']
 
@@ -85,7 +98,9 @@ class CompanyInfoLoader(TableLoader):
 
     def solve_unaccept_value(self, value, key):
 
-        if key == 'regcap':  # 一般是吊销企业或者注销的，这里会出现空值，按照意思应该是用0补全
+        if key == 'regcapcur':
+            value = self.currency.index('人民币')
+        elif key == 'regcap':  # 一般是吊销企业或者注销的，这里会出现空值，按照意思应该是用0补全
             value = 0
         elif key == 'entstatus':  # 要是数据缺失，默认是在营企业
             value = 2
